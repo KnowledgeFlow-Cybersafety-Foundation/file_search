@@ -11,3 +11,9 @@ textblob==0.18.0
 wordcloud==1.9.3
 matplotlib==3.8.3
 seaborn==0.13.2
+
+# Code quality tools
+black==24.3.0
+flake8==7.0.0
+isort==5.13.2
+pre-commit==3.7.0
