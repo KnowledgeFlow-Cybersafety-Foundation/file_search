@@ -1,18 +1,6 @@
 streamlit==1.31.0
 python-docx==1.1.0
-pandas==2.2.0
-plotly==5.18.0
-scikit-learn==1.4.0
-watchdog==4.0.0
-openpyxl==3.1.2
-Pillow==10.2.0
-nltk==3.8.1
-textblob==0.18.0
 wordcloud==1.9.3
-matplotlib==3.8.3
-seaborn==0.13.2
-
-# Code quality tools
 black==24.3.0
 flake8==7.0.0
 isort==5.13.2
