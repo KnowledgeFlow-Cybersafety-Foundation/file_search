@@ -5,7 +5,7 @@ A Streamlit-based application for searching through Word documents with an intui
 ## Features
 
 - 📄 **Document Loading**: Automatically load and index all Word documents from a folder
-- 🔍 **Multi-Search Methods**: 
+- 🔍 **Multi-Search Methods**:
   - Keyword search for exact matches
   - Similarity search using TF-IDF vectors
   - Combined search for best results
@@ -53,7 +53,7 @@ streamlit run src/app.py
 
 ## Usage
 
-1. **Load Documents**: 
+1. **Load Documents**:
    - Use the sidebar to specify your documents folder path
    - Click "Load Documents" to index all Word files
 

@@ -7,7 +7,7 @@ PAGE_CONFIG = {
     "page_title": "Document Search Dashboard",
     "page_icon": "📄",
     "layout": "wide",
-    "initial_sidebar_state": "expanded"
+    "initial_sidebar_state": "expanded",
 }
 
 # Search methods
@@ -17,28 +17,20 @@ SEARCH_METHODS = ["keyword", "similarity", "combined", "tags"]
 REPORT_FORMATS = ["json", "text", "csv"]
 
 # MIME types for downloads
-MIME_TYPES = {
-    'json': 'application/json',
-    'text': 'text/plain',
-    'csv': 'text/csv'
-}
+MIME_TYPES = {"json": "application/json", "text": "text/plain", "csv": "text/csv"}
 
 # TF-IDF configuration
-TFIDF_CONFIG = {
-    'max_features': 1000,
-    'stop_words': 'english',
-    'ngram_range': (1, 2)
-}
+TFIDF_CONFIG = {"max_features": 1000, "stop_words": "english", "ngram_range": (1, 2)}
 
 # Word cloud configuration
 WORDCLOUD_CONFIG = {
-    'width': 800,
-    'height': 400,
-    'background_color': 'white',
-    'max_words': 100,
-    'colormap': 'viridis',
-    'relative_scaling': 0.5,
-    'random_state': 42
+    "width": 800,
+    "height": 400,
+    "background_color": "white",
+    "max_words": 100,
+    "colormap": "viridis",
+    "relative_scaling": 0.5,
+    "random_state": 42,
 }
 
 # UI configuration

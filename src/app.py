@@ -2,26 +2,29 @@
 Main Streamlit application for Document Search Dashboard
 """
 
-import streamlit as st
-import os
 import sys
+
+import streamlit as st
 
 # Add src directory to path for imports
 sys.path.append("/Users/colinwork/Documents/GitHub/docker_file_search/src")
 
-# Import modular components
-from core.document_searcher import DocumentSearcher
-from ui.sidebar import render_sidebar
-from ui.tabs import (
+# Import after path setup to avoid E402 errors
+# fmt: off
+from core.document_searcher import DocumentSearcher  # noqa: E402
+from ui.components import display_document_metrics  # noqa: E402
+from ui.sidebar import render_sidebar  # noqa: E402
+from ui.tabs import (  # noqa: E402
+    render_analytics_tab,
     render_overview_tab,
     render_search_tab,
-    render_tag_cloud_tab,
-    render_analytics_tab,
     render_summary_report_tab,
+    render_tag_cloud_tab,
 )
-from ui.components import display_document_metrics
-from utils.constants import PAGE_CONFIG
-from utils.helpers import validate_folder_path
+from utils.constants import PAGE_CONFIG  # noqa: E402
+from utils.helpers import validate_folder_path  # noqa: E402
+
+# fmt: on
 
 # Page configuration
 st.set_page_config(**PAGE_CONFIG)

@@ -2,23 +2,19 @@
 Utility functions for the document search application
 """
 
-import re
 import json
-import pandas as pd
+import re
 from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
+
+import pandas as pd
 
 
 def highlight_query_terms(text: str, query_terms: List[str]) -> str:
     """Highlight query terms in text with markdown bold formatting"""
     highlighted = text
     for word in query_terms:
-        highlighted = re.sub(
-            f'({re.escape(word)})',
-            r'**\1**',
-            highlighted,
-            flags=re.IGNORECASE
-        )
+        highlighted = re.sub(f"({re.escape(word)})", r"**\1**", highlighted, flags=re.IGNORECASE)
     return highlighted
 
 
@@ -41,7 +37,7 @@ def format_file_size(size_kb: float) -> str:
 
 def generate_filename_with_timestamp(base_name: str, extension: str) -> str:
     """Generate filename with current timestamp"""
-    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     return f"{base_name}_{timestamp}.{extension}"
 
 
@@ -55,22 +51,24 @@ def safe_get_nested_value(dictionary: Dict, keys: List[str], default: Any = None
         return default
 
 
-def create_downloadable_summary(report_data: Dict[str, Any], format_type: str = "json") -> Optional[str]:
+def create_downloadable_summary(
+    report_data: Dict[str, Any], format_type: str = "json"
+) -> Optional[str]:
     """Create downloadable summary in different formats"""
     if format_type == "json":
         return json.dumps(report_data, indent=2, ensure_ascii=False)
-    
+
     elif format_type == "csv":
         # Create CSV for document details
-        if 'document_details' in report_data:
-            df = pd.DataFrame(report_data['document_details'])
+        if "document_details" in report_data:
+            df = pd.DataFrame(report_data["document_details"])
             return df.to_csv(index=False)
-    
+
     elif format_type == "text":
         # Create human-readable text summary
-        metadata = report_data.get('metadata', {})
-        stats = report_data.get('summary_statistics', {})
-        
+        metadata = report_data.get("metadata", {})
+        stats = report_data.get("summary_statistics", {})
+
         text_summary = f"""
 DOCUMENT SEARCH SUMMARY REPORT
 Generated: {metadata.get('generated_date', 'Unknown')}
@@ -90,33 +88,34 @@ Total Size: {stats.get('total_size_kb', 0)} KB
 DOCUMENT CATEGORIES
 -------------------
 """
-        
-        categories = stats.get('document_categories', {})
+
+        categories = stats.get("document_categories", {})
         for category, count in categories.items():
             text_summary += f"{category}: {count}\n"
-        
+
         text_summary += "\nDOCUMENT TYPES\n--------------\n"
-        doc_types = stats.get('document_types', {})
+        doc_types = stats.get("document_types", {})
         for doc_type, count in doc_types.items():
             text_summary += f"{doc_type}: {count}\n"
-        
-        if 'analytics' in report_data:
+
+        if "analytics" in report_data:
             text_summary += "\nTOP TAGS\n--------\n"
-            top_tags = report_data['analytics'].get('top_tags', {})
+            top_tags = report_data["analytics"].get("top_tags", {})
             for tag, count in list(top_tags.items())[:10]:
                 text_summary += f"{tag}: {count}\n"
-        
+
         return text_summary
-    
+
     return None
 
 
 def validate_folder_path(folder_path: str) -> bool:
     """Validate if folder path exists and is accessible"""
     import os
+
     return os.path.exists(folder_path) and os.path.isdir(folder_path)
 
 
 def extract_query_tags(query: str) -> List[str]:
     """Extract tags from a comma-separated query string"""
-    return [tag.strip() for tag in query.split(',') if tag.strip()]
+    return [tag.strip() for tag in query.split(",") if tag.strip()]
