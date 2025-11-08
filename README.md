@@ -11,7 +11,7 @@ The Streamlit app provides:
 - Clickable top-word tags to auto-populate the search box
 - Free-text search across all loaded documents with contextual snippets
 - Caching for faster repeated interactions (document load + wordcloud build)
-- Per-result document summary and direct download button
+- Per-result document summary (extractive LexRank via sumy) and direct download button
 
 
 ## Modular Structure
@@ -77,4 +77,5 @@ PY
 - Add unit tests under `tests/` for pure functions
 - Expose a REST API variant using FastAPI for integration
 - Support additional file types (`.txt`, `.pdf`)
-- Improve summarization (e.g., use NLP library for semantic summaries)
+- Improve summarization (e.g., use NLP models for abstractive summaries)
+- Add zero-shot or embedding-based tagging for compliance categories

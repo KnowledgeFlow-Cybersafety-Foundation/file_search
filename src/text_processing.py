@@ -72,3 +72,46 @@ def summarize_text(text: str, max_sentences: int = 2, max_chars: int = 400) -> s
         if summary
         else cleaned[:max_chars].rstrip() + ("..." if len(cleaned) > max_chars else "")
     )
+
+
+def summarize_text_extractive(text: str, sentences: int = 2) -> str:
+    """Extractive summary using sumy LexRank with adaptive tuning.
+
+    - Automatically increases sentence count for long documents up to a small cap.
+    - Falls back to simple sentence truncation if sumy is unavailable.
+    """
+    try:  # pragma: no cover - external dependency behavior
+        from sumy.nlp.tokenizers import Tokenizer
+        from sumy.parsers.plaintext import PlaintextParser
+        from sumy.summarizers.lex_rank import LexRankSummarizer
+
+        # Adjust sentence count based on length
+        plain = re.sub(r"\s+", " ", text).strip()
+        n = sentences
+        if len(plain) > 2000:
+            n = max(sentences, 4)
+        elif len(plain) > 1000:
+            n = max(sentences, 3)
+
+        parser = PlaintextParser.from_string(plain, Tokenizer("english"))
+        summarizer = LexRankSummarizer()
+        result = summarizer(parser.document, n)
+        chosen = [s._text for s in result if getattr(s, "_text", "").strip()]
+        return " ".join(chosen) if chosen else summarize_text(text, max_sentences=n)
+    except Exception:
+        return summarize_text(text, max_sentences=sentences)
+
+
+def extract_keyphrases(text: str, top_n: int = 8) -> List[str]:
+    """Extract keyphrases using YAKE. Returns list of phrases ordered by relevance.
+
+    Falls back to empty list if YAKE unavailable.
+    """
+    try:  # pragma: no cover - external dependency behavior
+        import yake
+
+        kw_extractor = yake.KeywordExtractor(n=3, top=top_n)
+        keyphrases = [kw for kw, _score in kw_extractor.extract_keywords(text)]
+        return keyphrases
+    except Exception:
+        return []

@@ -1,10 +1,9 @@
-import re
 from pathlib import Path
 from typing import Dict, List, Tuple
 
 import streamlit as st
 
-from text_processing import summarize_text
+from text_processing import summarize_text_extractive
 
 
 def render_top_terms(wc, extract_top_words_fn, columns: int = 6) -> str | None:
@@ -26,7 +25,7 @@ def render_results(
     docs: Dict[str, str] | None = None,
     documents_dir: Path | None = None,
 ) -> None:
-    """Render search results with summary, highlighted snippets, and download button.
+    """Render search results with a better summary and a download button.
 
     - docs: mapping of filename -> full text used for summary (optional but recommended)
     - documents_dir: folder path to load the .docx for download button (optional)
@@ -35,21 +34,14 @@ def render_results(
     if not matches:
         st.info("No documents matched your search term.")
         return
-    for doc_name, snippet in matches:
-        highlighted = re.sub(
-            rf"\\b({re.escape(search_term)})\\b", r"**\\1**", snippet, flags=re.IGNORECASE
-        )
+    for doc_name, _snippet in matches:
         with st.expander(doc_name):
-            # Summary
             full_text = docs.get(doc_name) if docs else None
             if full_text:
-                summary = summarize_text(full_text)
+                summary = summarize_text_extractive(full_text)
                 if summary:
                     st.markdown("**Summary**")
                     st.write(summary)
-            # Snippet with highlights
-            st.markdown("**Match snippet**")
-            st.write(highlighted)
             # Download button
             if documents_dir is not None:
                 file_path = documents_dir / doc_name

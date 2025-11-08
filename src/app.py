@@ -12,15 +12,18 @@ from ui_components import render_results, render_top_terms
 st.set_page_config(page_title=PAGE_TITLE, layout="wide")
 st.title("📄 " + PAGE_TITLE)
 
-# Load documents
-with st.spinner("Loading documents..."):
-    documents = load_documents()
+# Load documents (cached). Avoid spinner so reruns stay instant.
+documents = load_documents()
 
 if not documents:
     st.warning(f"No .docx documents found in '{DOCUMENTS_DIR}'. Add files and refresh.")
     st.stop()
 
 st.caption(f"Loaded {len(documents)} document(s) from '{DOCUMENTS_DIR}'.")
+if st.button("Refresh documents cache"):
+    # Clear cached data and rerun to reload .docx files
+    load_documents.clear()  # type: ignore[attr-defined]
+    st.rerun()
 
 # Aggregate text and build word cloud
 raw_text = aggregate_text(documents)
