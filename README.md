@@ -11,7 +11,8 @@ The Streamlit app provides:
 - Clickable top-word tags to auto-populate the search box
 - Free-text search across all loaded documents with contextual snippets
 - Caching for faster repeated interactions (document load + wordcloud build)
- - Sidebar controls to add extra stopwords dynamically
+- Per-result document summary and direct download button
+
 
 ## Modular Structure
 
@@ -75,5 +76,5 @@ PY
 
 - Add unit tests under `tests/` for pure functions
 - Expose a REST API variant using FastAPI for integration
-- Parameterize stopwords via a sidebar configuration panel
 - Support additional file types (`.txt`, `.pdf`)
+- Improve summarization (e.g., use NLP library for semantic summaries)

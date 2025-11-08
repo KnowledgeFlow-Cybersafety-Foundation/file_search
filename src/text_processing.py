@@ -46,3 +46,29 @@ def extract_top_words(wc: WordCloud, limit: int = TOP_N_WORDS) -> List[Tuple[str
     items = wc.words_.items()  # word: relative freq (0-1)
     sorted_items = sorted(items, key=lambda x: x[1], reverse=True)[:limit]
     return [(w, int(freq * 1000)) for w, freq in sorted_items]
+
+
+def summarize_text(text: str, max_sentences: int = 2, max_chars: int = 400) -> str:
+    """Lightweight extractive summary: take first non-empty sentences up to limits.
+
+    Splits on period boundaries. This avoids external dependencies while giving a
+    quick preview. If the text is already short, returns it unchanged.
+    """
+    cleaned = re.sub(r"\s+", " ", text).strip()
+    if len(cleaned) <= max_chars:
+        return cleaned
+    # Naive sentence split
+    sentences = [s.strip() for s in re.split(r"(?<=\.)\s+", cleaned) if s.strip()]
+    selected: List[str] = []
+    for s in sentences:
+        if len(" ".join(selected + [s])) > max_chars:
+            break
+        selected.append(s)
+        if len(selected) >= max_sentences:
+            break
+    summary = " ".join(selected).strip()
+    return (
+        summary
+        if summary
+        else cleaned[:max_chars].rstrip() + ("..." if len(cleaned) > max_chars else "")
+    )
