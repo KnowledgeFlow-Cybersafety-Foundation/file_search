@@ -1,81 +1,38 @@
-# Document Search Dashboard
+# Document Word Cloud Search
 
-A Streamlit-based application for searching through Word documents with an intuitive web interface.
+A small Streamlit app to build a word cloud from multiple `.docx` files and search those documents with contextual snippets and simple extractive summaries.
 
-## Features
+## Quick start
 
-The Streamlit app provides:
-
-- Bulk loading of `.docx` files from `src/documents/`
-- Word cloud visualization of most frequent terms
-- Clickable top-word tags to auto-populate the search box
-- Free-text search across all loaded documents with contextual snippets
-- Caching for faster repeated interactions (document load + wordcloud build)
-- Per-result document summary (extractive LexRank via sumy) and direct download button
-
-
-## Modular Structure
-
-The original monolithic `app.py` has been refactored for clarity and reuse:
-
-```
-src/
-	app.py              # Streamlit UI composition
-	config.py           # Configuration constants (paths, limits, page title)
-	data_loader.py      # Document loading + aggregation helpers
-	text_processing.py  # Text cleanup, word cloud generation, top word extraction
-		ui_components.py    # Reusable UI fragments (top terms, search results)
-	search.py           # Search/matching logic for term snippets
-	documents/          # Place your .docx files here
-```
-
-You can import and reuse logic outside Streamlit, e.g. for tests or CLI tools:
-
-```python
-from config import DOCUMENTS_DIR
-from data_loader import load_documents
-from text_processing import clean_text, build_wordcloud, extract_top_words
-from search import find_matches
-```
-
-## Quick Start
-
-### Local Development
-
-1. Install Python 3.11+ and dependencies:
+1. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Run the Streamlit app:
+2. Run the app:
 ```bash
 streamlit run src/app.py
 ```
 
-3. Open your browser to `http://localhost:8501`
+3. Open your browser at http://localhost:8501
 
-## Testing Core Logic (Optional)
+## Features
 
-Without starting Streamlit you can smoke-test the pipeline:
+- Load `.docx` files from `src/documents/`
+- Build a word cloud and show top terms as clickable buttons
+- Search documents with contextual snippets
+- Per-document extractive summaries and direct download of source `.docx`
 
-```bash
-python - <<'PY'
-import sys; sys.path.append('src')
-from data_loader import load_documents, aggregate_text
-from text_processing import clean_text, build_wordcloud, extract_top_words
-from search import find_matches
-docs = load_documents()
-text = clean_text(aggregate_text(docs))
-wc = build_wordcloud(text)
-print('Top words:', extract_top_words(wc)[:5])
-print('Search sample:', find_matches(docs, extract_top_words(wc)[0][0])[:1])
-PY
-```
+## Project layout
 
-## Next Ideas
+- `src/app.py` — Streamlit UI composition
+- `src/data_loader.py` — document loading & aggregation
+- `src/text_processing.py` — cleaning, wordcloud, summaries
+- `src/search.py` — search & snippet extraction
+- `src/ui_components.py` — reusable UI fragments
+- `src/documents/` — place your `.docx` files here
 
-- Add unit tests under `tests/` for pure functions
-- Expose a REST API variant using FastAPI for integration
-- Support additional file types (`.txt`, `.pdf`)
-- Improve summarization (e.g., use NLP models for abstractive summaries)
-- Add zero-shot or embedding-based tagging for compliance categories
+## Notes
+
+- Caching is used for document loading and wordcloud building for faster reruns.
+- Summaries use a lightweight extractive approach and fall back if optional libraries are missing.
